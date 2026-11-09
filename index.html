@@ -1,0 +1,898 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synth Care Labs | Sign in</title>
+
+    <style>
+        :root {
+            --bg: #0d1117;
+            --sidebar: #111820;
+            --panel: #161f2a;
+            --panel-hover: #1c2937;
+            --border: #283543;
+            --text: #e6edf3;
+            --muted: #8b9bab;
+            --blue: #1688e8;
+            --blue-light: #55aaff;
+            --red: #e05252;
+            --green: #35b878;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        button, input {
+            font: inherit;
+        }
+
+        /* Top navigation */
+
+        .topbar {
+            height: 64px;
+            min-height: 64px;
+            background: #101720;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 17px;
+        }
+
+        .brand-name {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .brand-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .environment {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* Main content */
+
+        .main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .page-heading {
+            margin-bottom: 24px;
+        }
+
+        .page-heading h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 8px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Authentication panel */
+
+        .auth-panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 20px 23px;
+            border-bottom: 1px solid var(--border);
+            background: #131c26;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .panel-subtitle {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .panel-body {
+            padding: 23px;
+        }
+
+        /* Form elements */
+
+        .form-group {
+            margin-bottom: 19px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #c8d2dc;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 40px;
+            padding: 0 12px;
+            background: #0f1720;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: white;
+            outline: none;
+            transition: border-color .15s;
+        }
+
+        .form-input::placeholder {
+            color: #657587;
+        }
+
+        .form-input:focus {
+            border-color: var(--blue);
+        }
+
+        .form-input:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .password-hint {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 7px;
+            line-height: 1.5;
+        }
+
+        /* Buttons */
+
+        .button {
+            width: 100%;
+            height: 40px;
+            padding: 0 14px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: #172331;
+            color: var(--text);
+            cursor: pointer;
+            transition: background .15s;
+        }
+
+        .button:hover {
+            background: #223448;
+        }
+
+        .button.primary {
+            background: #0866b5;
+            border-color: #0866b5;
+            color: white;
+            font-weight: 600;
+        }
+
+        .button.primary:hover {
+            background: #0878d1;
+        }
+
+        .button:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        /* Form switching */
+
+        .form-switch {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 21px;
+        }
+
+        .text-button {
+            border: none;
+            background: transparent;
+            color: var(--blue-light);
+            cursor: pointer;
+            padding: 0;
+            font-size: 12px;
+        }
+
+        .text-button:hover {
+            text-decoration: underline;
+        }
+
+        /* Messages */
+
+        .message {
+            display: none;
+            padding: 11px 13px;
+            margin-bottom: 18px;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .message.error {
+            display: block;
+            color: #ffaaaa;
+            background: #3a2025;
+            border: 1px solid #71343d;
+        }
+
+        .message.success {
+            display: block;
+            color: #9de5bd;
+            background: #19372b;
+            border: 1px solid #285d44;
+        }
+
+        .message.info {
+            display: block;
+            color: #9dcfff;
+            background: #193149;
+            border: 1px solid #28557b;
+        }
+
+        /* Security information */
+
+        .security-note {
+            margin-top: 18px;
+            padding: 13px 15px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background: #111a24;
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+        }
+
+        .security-icon {
+            color: var(--blue-light);
+            font-size: 16px;
+        }
+
+        .security-text {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .security-text strong {
+            display: block;
+            color: #c8d2dc;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+
+        /* Footer */
+
+        .footer {
+            border-top: 1px solid var(--border);
+            background: #101720;
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 600px) {
+            .topbar {
+                padding: 0 16px;
+            }
+
+            .environment {
+                display: none;
+            }
+
+            .main {
+                padding: 25px 15px;
+                align-items: flex-start;
+            }
+
+            .auth-container {
+                margin-top: 35px;
+            }
+
+            .footer {
+                padding: 14px 16px;
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">S</div>
+
+            <div>
+                <div class="brand-name">Synth Care Labs</div>
+                <div class="brand-subtitle">Security Center</div>
+            </div>
+        </div>
+
+        <div class="environment">
+            Tenant: synthcarelabs.onmicrosoft.com
+        </div>
+    </header>
+
+
+    <!-- Main authentication area -->
+
+    <main class="main">
+
+        <div class="auth-container">
+
+            <div class="page-heading">
+                <h1>Security Center</h1>
+                <p>
+                    Sign in to access your organization's device inventory
+                    and security resources.
+                </p>
+            </div>
+
+
+            <section class="auth-panel">
+
+                <div class="panel-header">
+                    <div class="panel-title" id="panelTitle">
+                        Sign in
+                    </div>
+
+                    <div class="panel-subtitle" id="panelSubtitle">
+                        Use your Synth Care Labs account to continue.
+                    </div>
+                </div>
+
+
+                <div class="panel-body">
+
+                    <div id="message" class="message"></div>
+
+
+                    <!-- LOGIN FORM -->
+
+                    <form id="loginForm">
+
+                        <div class="form-group">
+                            <label class="form-label" for="loginUsername">
+                                Username
+                            </label>
+
+                            <input
+                                class="form-input"
+                                type="text"
+                                id="loginUsername"
+                                name="username"
+                                placeholder="Enter your username"
+                                autocomplete="username"
+                                minlength="3"
+                                maxlength="32"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="form-label" for="loginPassword">
+                                Password
+                            </label>
+
+                            <input
+                                class="form-input"
+                                type="password"
+                                id="loginPassword"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+                        </div>
+
+
+                        <button
+                            class="button primary"
+                            type="submit"
+                            id="loginButton"
+                        >
+                            Sign in
+                        </button>
+
+
+                        <div class="form-switch">
+                            Don't have an account?
+                            <button
+                                type="button"
+                                class="text-button"
+                                id="showRegister"
+                            >
+                                Create an account
+                            </button>
+                        </div>
+
+                    </form>
+
+
+                    <!-- REGISTRATION FORM -->
+
+                    <form id="registerForm" class="hidden">
+
+                        <div class="form-group">
+                            <label class="form-label" for="registerUsername">
+                                Username
+                            </label>
+
+                            <input
+                                class="form-input"
+                                type="text"
+                                id="registerUsername"
+                                name="username"
+                                placeholder="Choose a username"
+                                autocomplete="username"
+                                minlength="3"
+                                maxlength="32"
+                                pattern="[a-zA-Z0-9_.-]+"
+                                required
+                            >
+
+                            <div class="password-hint">
+                                3–32 characters. Letters, numbers, dots,
+                                underscores and hyphens.
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="form-label" for="registerPassword">
+                                Password
+                            </label>
+
+                            <input
+                                class="form-input"
+                                type="password"
+                                id="registerPassword"
+                                name="password"
+                                placeholder="Create a password"
+                                autocomplete="new-password"
+                                minlength="8"
+                                maxlength="128"
+                                required
+                            >
+
+                            <div class="password-hint">
+                                Your password must contain at least 8 characters.
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="form-label" for="confirmPassword">
+                                Confirm password
+                            </label>
+
+                            <input
+                                class="form-input"
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                placeholder="Confirm your password"
+                                autocomplete="new-password"
+                                required
+                            >
+                        </div>
+
+
+                        <button
+                            class="button primary"
+                            type="submit"
+                            id="registerButton"
+                        >
+                            Create account
+                        </button>
+
+
+                        <div class="form-switch">
+                            Already have an account?
+                            <button
+                                type="button"
+                                class="text-button"
+                                id="showLogin"
+                            >
+                                Sign in
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+            <!-- Security information -->
+
+            <div class="security-note">
+                <div class="security-icon">▣</div>
+
+                <div class="security-text">
+                    <strong>Secure authentication</strong>
+                    Your session is managed by Synth Care Labs.
+                    Authentication is required to access organizational
+                    device information.
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- Footer -->
+
+    <footer class="footer">
+        <span>Synth Care Labs · Security Operations</span>
+        <span>Security Center · Authentication Portal</span>
+    </footer>
+
+
+    <script>
+        // --------------------------------------------------
+        // API configuration
+        // --------------------------------------------------
+
+        const LOGIN_API = "/api/login";
+        const REGISTER_API = "/api/register";
+        const SESSION_API = "/api/session";
+
+        // Change this if your dashboard is hosted elsewhere.
+        const DASHBOARD_URL = "/";
+
+
+        // --------------------------------------------------
+        // Elements
+        // --------------------------------------------------
+
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+
+        const panelTitle = document.getElementById("panelTitle");
+        const panelSubtitle = document.getElementById("panelSubtitle");
+
+        const messageElement = document.getElementById("message");
+
+        const loginButton = document.getElementById("loginButton");
+        const registerButton = document.getElementById("registerButton");
+
+
+        // --------------------------------------------------
+        // Message handling
+        // --------------------------------------------------
+
+        function showMessage(message, type = "error") {
+            messageElement.textContent = message;
+            messageElement.className = `message ${type}`;
+        }
+
+        function clearMessage() {
+            messageElement.textContent = "";
+            messageElement.className = "message";
+        }
+
+
+        // --------------------------------------------------
+        // Form switching
+        // --------------------------------------------------
+
+        function showLoginForm() {
+            clearMessage();
+
+            registerForm.classList.add("hidden");
+            loginForm.classList.remove("hidden");
+
+            panelTitle.textContent = "Sign in";
+            panelSubtitle.textContent =
+                "Use your Synth Care Labs account to continue.";
+        }
+
+        function showRegisterForm() {
+            clearMessage();
+
+            loginForm.classList.add("hidden");
+            registerForm.classList.remove("hidden");
+
+            panelTitle.textContent = "Create an account";
+            panelSubtitle.textContent =
+                "Register a new Synth Care Labs user account.";
+        }
+
+        document.getElementById("showRegister")
+            .addEventListener("click", showRegisterForm);
+
+        document.getElementById("showLogin")
+            .addEventListener("click", showLoginForm);
+
+
+        // --------------------------------------------------
+        // API helper
+        // --------------------------------------------------
+
+        async function apiRequest(url, method = "GET", body = null) {
+
+            const options = {
+                method,
+                credentials: "same-origin",
+                headers: {
+                    "Accept": "application/json"
+                }
+            };
+
+            if (body !== null) {
+                options.headers["Content-Type"] = "application/json";
+                options.body = JSON.stringify(body);
+            }
+
+            const response = await fetch(url, options);
+
+            let data = {};
+
+            try {
+                data = await response.json();
+            } catch {
+                throw new Error("The server returned an invalid response.");
+            }
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message ||
+                    data.error ||
+                    `Request failed with HTTP ${response.status}`
+                );
+            }
+
+            return data;
+        }
+
+
+        // --------------------------------------------------
+        // Login
+        // --------------------------------------------------
+
+        loginForm.addEventListener("submit", async event => {
+
+            event.preventDefault();
+            clearMessage();
+
+            const username = document
+                .getElementById("loginUsername")
+                .value.trim();
+
+            const password = document
+                .getElementById("loginPassword")
+                .value;
+
+            loginButton.disabled = true;
+            loginButton.textContent = "Signing in...";
+
+            try {
+
+                const result = await apiRequest(
+                    LOGIN_API,
+                    "POST",
+                    {
+                        username,
+                        password
+                    }
+                );
+
+                if (!result.success) {
+                    throw new Error(
+                        result.message || "Authentication failed."
+                    );
+                }
+
+                showMessage(
+                    "Authentication successful. Redirecting...",
+                    "success"
+                );
+
+                // The backend has established the session cookie.
+                window.location.assign(DASHBOARD_URL);
+
+            } catch (error) {
+
+                showMessage(
+                    error.message || "Unable to sign in.",
+                    "error"
+                );
+
+                loginButton.disabled = false;
+                loginButton.textContent = "Sign in";
+            }
+        });
+
+
+        // --------------------------------------------------
+        // Registration
+        // --------------------------------------------------
+
+        registerForm.addEventListener("submit", async event => {
+
+            event.preventDefault();
+            clearMessage();
+
+            const username = document
+                .getElementById("registerUsername")
+                .value.trim();
+
+            const password = document
+                .getElementById("registerPassword")
+                .value;
+
+            const confirmPassword = document
+                .getElementById("confirmPassword")
+                .value;
+
+
+            // Client-side validation
+
+            if (password.length < 8 || password.length > 128) {
+                showMessage(
+                    "Password must contain between 8 and 128 characters.",
+                    "error"
+                );
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage(
+                    "The passwords do not match.",
+                    "error"
+                );
+                return;
+            }
+
+            if (!/^[a-zA-Z0-9_.-]{3,32}$/.test(username)) {
+                showMessage(
+                    "Username must contain 3–32 valid characters.",
+                    "error"
+                );
+                return;
+            }
+
+
+            registerButton.disabled = true;
+            registerButton.textContent = "Creating account...";
+
+            try {
+
+                const result = await apiRequest(
+                    REGISTER_API,
+                    "POST",
+                    {
+                        username,
+                        password
+                    }
+                );
+
+                if (!result.success) {
+                    throw new Error(
+                        result.message || "Account registration failed."
+                    );
+                }
+
+                showMessage(
+                    "Account created successfully. Redirecting...",
+                    "success"
+                );
+
+                // The registration endpoint automatically creates
+                // an authenticated session.
+                window.location.assign(DASHBOARD_URL);
+
+            } catch (error) {
+
+                showMessage(
+                    error.message || "Unable to create account.",
+                    "error"
+                );
+
+                registerButton.disabled = false;
+                registerButton.textContent = "Create account";
+            }
+        });
+
+
+        // --------------------------------------------------
+        // Check existing session
+        // --------------------------------------------------
+
+        async function checkExistingSession() {
+
+            try {
+
+                const result = await apiRequest(SESSION_API);
+
+                if (result.authenticated) {
+                    window.location.replace(DASHBOARD_URL);
+                }
+
+            } catch (error) {
+                // No active session. Display the login page.
+                console.log("No active session.");
+            }
+        }
+
+
+        // --------------------------------------------------
+        // Initialisation
+        // --------------------------------------------------
+
+        document.addEventListener("DOMContentLoaded", () => {
+            checkExistingSession();
+        });
+
+    </script>
+
+</body>
+</html>

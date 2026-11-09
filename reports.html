@@ -1,0 +1,1177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports | Synth Care Labs</title>
+
+    <style>
+        :root {
+            --bg: #0d1117;
+            --sidebar: #111820;
+            --panel: #161f2a;
+            --panel-hover: #1c2937;
+            --border: #283543;
+            --text: #e6edf3;
+            --muted: #8b9bab;
+            --blue: #1688e8;
+            --blue-light: #55aaff;
+            --orange: #e6a23c;
+            --red: #e05252;
+            --green: #35b878;
+            --yellow: #e7cc70;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        button, input, select, textarea {
+            font: inherit;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+
+        .sidebar {
+            width: 245px;
+            min-width: 245px;
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            height: 64px;
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+            border-bottom: 1px solid var(--border);
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .brand-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 17px;
+        }
+
+        .brand-name {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .brand-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .sidebar-section {
+            padding: 22px 12px 8px;
+            color: #738397;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+        }
+
+        .nav-item {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 15px;
+            margin: 2px 9px;
+            color: #aab7c4;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background .15s, color .15s;
+        }
+
+        .nav-item:hover {
+            background: #1b2835;
+            color: white;
+        }
+
+        .nav-item.active {
+            background: #183a5a;
+            color: white;
+            border-left: 3px solid var(--blue-light);
+            padding-left: 12px;
+        }
+
+        .nav-icon {
+            width: 19px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* Main layout */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 64px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            background: #101720;
+        }
+
+        .breadcrumb {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .breadcrumb strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tenant {
+            color: #aab7c4;
+            font-size: 12px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .user-role {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .admin-indicator {
+            color: #80d5a4;
+        }
+
+        .user-avatar {
+            height: 31px;
+            width: 31px;
+            border-radius: 50%;
+            background: #294e70;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            color: white;
+        }
+
+        .logout-button {
+            padding: 7px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: #172331;
+            color: var(--text);
+            cursor: pointer;
+            transition: background .15s, border-color .15s;
+        }
+
+        .logout-button:hover {
+            background: #223448;
+            border-color: #49647d;
+        }
+
+        .logout-button:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        /* Content */
+
+        .content {
+            padding: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .page-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 27px;
+            gap: 20px;
+        }
+
+        .page-heading h1 {
+            font-size: 25px;
+            font-weight: 600;
+            margin: 0 0 8px;
+        }
+
+        .page-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* Banner */
+
+        .banner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #302719;
+            border: 1px solid #66502e;
+            color: #e9c68e;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 26px;
+            font-size: 12px;
+        }
+
+        .banner-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Statistics */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 15px;
+            margin-bottom: 26px;
+        }
+
+        .stat {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 17px 19px;
+            min-width: 0;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 25px;
+            font-weight: 600;
+        }
+
+        .good {
+            color: #80d5a4;
+        }
+
+        .high {
+            color: var(--orange);
+        }
+
+        /* Panels */
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 19px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            gap: 15px;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .panel-description {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* Reports */
+
+        .reports-list {
+            padding: 0 20px;
+        }
+
+        .report {
+            padding: 17px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .report:last-child {
+            border-bottom: none;
+        }
+
+        .report-info {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 0;
+        }
+
+        .report-icon {
+            width: 39px;
+            height: 39px;
+            flex-shrink: 0;
+            border-radius: 5px;
+            background: #183a5a;
+            color: var(--blue-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+        }
+
+        .report-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #c6d5e2;
+        }
+
+        .report-meta {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        .report-format {
+            display: inline-block;
+            margin-left: 7px;
+            padding: 3px 6px;
+            border-radius: 3px;
+            background: #202e42;
+            border: 1px solid #30445e;
+            color: #aab7c4;
+            font-size: 10px;
+        }
+
+        .report-actions {
+            flex-shrink: 0;
+        }
+
+        .button {
+            background: #176cb5;
+            color: white;
+            border: 1px solid #2785d6;
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background .15s, border-color .15s;
+        }
+
+        .button:hover {
+            background: #2383d2;
+            border-color: #55aaff;
+        }
+
+        .button:active {
+            background: #145b98;
+        }
+
+        /* Toast notifications */
+
+        .toast-container {
+            position: fixed;
+            top: 82px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            width: 360px;
+            max-width: calc(100vw - 32px);
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 16px;
+            background: #202b38;
+            border: 1px solid #3b4b5d;
+            border-left: 4px solid var(--orange);
+            border-radius: 5px;
+            box-shadow: 0 8px 25px rgba(0,0,0,.4);
+            opacity: 0;
+            transform: translateX(25px);
+            transition: opacity .25s ease, transform .25s ease;
+            pointer-events: auto;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #493a23;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #f1f4f7;
+        }
+
+        .toast-message {
+            font-size: 12px;
+            line-height: 1.5;
+            color: #aebbc8;
+        }
+
+        .toast-close {
+            border: none;
+            background: transparent;
+            color: #8b9bab;
+            cursor: pointer;
+            font-size: 17px;
+            padding: 0;
+        }
+
+        .toast-close:hover {
+            color: white;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 205px;
+                min-width: 205px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 650px) {
+            .sidebar {
+                width: 58px;
+                min-width: 58px;
+            }
+
+            .brand {
+                padding: 0 14px;
+            }
+
+            .brand-name,
+            .brand-subtitle,
+            .sidebar-section,
+            .nav-label,
+            .sidebar-footer {
+                display: none;
+            }
+
+            .nav-item {
+                justify-content: center;
+                padding: 0;
+                margin: 3px 6px;
+            }
+
+            .nav-item.active {
+                padding-left: 0;
+                border-left: none;
+                border-bottom: 3px solid var(--blue-light);
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .tenant,
+            .user-info {
+                display: none;
+            }
+
+            .page-heading {
+                flex-direction: column;
+            }
+
+            .stats {
+                gap: 8px;
+            }
+
+            .stat {
+                padding: 13px;
+            }
+
+            .stat-number {
+                font-size: 22px;
+            }
+
+            .panel-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .report {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .report-actions {
+                width: 100%;
+            }
+
+            .report-actions .button {
+                width: 100%;
+            }
+
+            .report-info {
+                gap: 9px;
+            }
+
+            .report-icon {
+                width: 34px;
+                height: 34px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">S</div>
+            <div>
+                <div class="brand-name">Synth Care Labs</div>
+                <div class="brand-subtitle">Security Center</div>
+            </div>
+        </div>
+
+        <div class="sidebar-section">Workspace</div>
+
+        <a href="/incidents" class="nav-item" data-section="incidents">
+            <span class="nav-icon">⚑</span>
+            <span class="nav-label">Incidents &amp; alerts</span>
+        </a>
+
+        <a href="/hunting" class="nav-item" data-section="hunting">
+            <span class="nav-icon">⌕</span>
+            <span class="nav-label">Advanced hunting</span>
+        </a>
+
+        <div class="sidebar-section">Assets</div>
+
+        <a href="/" class="nav-item" data-section="devices">
+            <span class="nav-icon">▣</span>
+            <span class="nav-label">Devices</span>
+        </a>
+
+        <a href="/identities" class="nav-item" data-section="identities">
+            <span class="nav-icon">♙</span>
+            <span class="nav-label">Identities</span>
+        </a>
+
+        <a href="/applications" class="nav-item" data-section="applications">
+            <span class="nav-icon">▤</span>
+            <span class="nav-label">Applications</span>
+        </a>
+
+        <a href="/cloud-resources" class="nav-item" data-section="cloud-resources">
+            <span class="nav-icon">☁</span>
+            <span class="nav-label">Cloud resources</span>
+        </a>
+
+        <div class="sidebar-section">Management</div>
+
+        <a href="/configuration" class="nav-item" data-section="configuration">
+            <span class="nav-icon">⚙</span>
+            <span class="nav-label">Configuration</span>
+        </a>
+
+        <a href="/vulnerability-management" class="nav-item" data-section="vulnerability-management">
+            <span class="nav-icon">◇</span>
+            <span class="nav-label">Vulnerability management</span>
+        </a>
+
+        <a href="/reports" class="nav-item active" data-section="reports">
+            <span class="nav-icon">▥</span>
+            <span class="nav-label">Reports</span>
+        </a>
+
+        <div class="sidebar-footer">
+            Synth Care Labs<br>
+            Security Operations
+        </div>
+
+    </aside>
+
+    <!-- Main content -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="breadcrumb">
+                Security Center &nbsp; / &nbsp; <strong>Reports</strong>
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="tenant">
+                    Tenant: synthcarelabs.onmicrosoft.com
+                </div>
+
+                <div class="user-info">
+                    <div class="user-name" id="currentUsername">Loading...</div>
+                    <div class="user-role" id="currentRole">Checking permissions...</div>
+                </div>
+
+                <button class="logout-button" id="logoutButton" type="button">
+                    Sign out
+                </button>
+
+                <div class="user-avatar" id="userAvatar">SC</div>
+
+            </div>
+
+        </header>
+
+        <div class="content">
+
+            <div class="page-heading">
+                <div>
+                    <h1>Security reports</h1>
+                    <p>
+                        Review generated security reports and compliance summaries.
+                    </p>
+                </div>
+            </div>
+
+            <div class="banner">
+                <span class="banner-icon">⚠</span>
+                <span>
+                    Security reports are generated periodically and reflect the latest available assessment data.
+                </span>
+            </div>
+
+            <!-- Statistics -->
+
+            <section class="stats">
+
+                <div class="stat">
+                    <div class="stat-label">Available reports</div>
+                    <div class="stat-number">4</div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-label">PDF reports</div>
+                    <div class="stat-number good">3</div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-label">CSV reports</div>
+                    <div class="stat-number">1</div>
+                </div>
+
+            </section>
+
+            <!-- Available reports -->
+
+            <section class="panel">
+
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title">Available reports</div>
+                        <div class="panel-description">
+                            Generated security assessments and compliance summaries.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reports-list">
+
+                    <div class="report">
+
+                        <div class="report-info">
+                            <div class="report-icon">▤</div>
+
+                            <div>
+                                <div class="report-name">Monthly security posture</div>
+                                <div class="report-meta">
+                                    October 2026
+                                    <span class="report-format">PDF</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="report-actions">
+                            <button class="button" type="button"
+                                data-report="Monthly security posture">
+                                View report
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="report">
+
+                        <div class="report-info">
+                            <div class="report-icon">▤</div>
+
+                            <div>
+                                <div class="report-name">Device compliance overview</div>
+                                <div class="report-meta">
+                                    November 2026
+                                    <span class="report-format">PDF</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="report-actions">
+                            <button class="button" type="button"
+                                data-report="Device compliance overview">
+                                View report
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="report">
+
+                        <div class="report-info">
+                            <div class="report-icon">▤</div>
+
+                            <div>
+                                <div class="report-name">Identity risk assessment</div>
+                                <div class="report-meta">
+                                    November 2026
+                                    <span class="report-format">PDF</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="report-actions">
+                            <button class="button" type="button"
+                                data-report="Identity risk assessment">
+                                View report
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="report">
+
+                        <div class="report-info">
+                            <div class="report-icon">▦</div>
+
+                            <div>
+                                <div class="report-name">Application permissions audit</div>
+                                <div class="report-meta">
+                                    September 2026
+                                    <span class="report-format">CSV</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="report-actions">
+                            <button class="button" type="button"
+                                data-report="Application permissions audit">
+                                View report
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- Toast notifications -->
+
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+
+    // --------------------------------------------------
+    // Configuration
+    // --------------------------------------------------
+
+    const SESSION_URL = "/api/session";
+
+    let currentUser = null;
+
+    // --------------------------------------------------
+    // Toast notifications
+    // --------------------------------------------------
+
+    function showToast(title, message, icon = "⚠", duration = 5000) {
+
+        const container = document.getElementById("toast-container");
+
+        const toast = document.createElement("div");
+        toast.className = "toast";
+
+        const iconElement = document.createElement("div");
+        iconElement.className = "toast-icon";
+        iconElement.textContent = icon;
+
+        const content = document.createElement("div");
+        content.className = "toast-content";
+
+        const titleElement = document.createElement("div");
+        titleElement.className = "toast-title";
+        titleElement.textContent = title;
+
+        const messageElement = document.createElement("div");
+        messageElement.className = "toast-message";
+        messageElement.textContent = message;
+
+        const closeButton = document.createElement("button");
+        closeButton.className = "toast-close";
+        closeButton.textContent = "×";
+        closeButton.setAttribute("aria-label", "Close notification");
+
+        content.append(titleElement, messageElement);
+        toast.append(iconElement, content, closeButton);
+
+        container.appendChild(toast);
+
+        requestAnimationFrame(() => toast.classList.add("show"));
+
+        let timeout;
+
+        function removeToast() {
+            clearTimeout(timeout);
+            toast.classList.remove("show");
+            setTimeout(() => toast.remove(), 250);
+        }
+
+        closeButton.addEventListener("click", removeToast);
+        timeout = setTimeout(removeToast, duration);
+
+    }
+
+    function showAdminToast() {
+
+        showToast(
+            "Admin access required",
+            "You need administrator permissions to access this section.",
+            "🔒"
+        );
+
+    }
+
+    // --------------------------------------------------
+    // Session initialization
+    // --------------------------------------------------
+
+    async function initializeSession() {
+
+        try {
+
+            const response = await fetch(SESSION_URL, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                },
+                credentials: "same-origin",
+                cache: "no-store"
+            });
+
+            if (!response.ok) {
+                throw new Error(`Session API returned HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+            const user = data.user || data;
+
+            if (
+                data.authenticated === false ||
+                !user ||
+                !(user.username || user.email)
+            ) {
+
+                window.location.replace("/");
+                return false;
+
+            }
+
+            currentUser = {
+                username: user.username || user.email,
+                role: user.role || "user"
+            };
+
+            document.getElementById("currentUsername").textContent =
+                currentUser.username;
+
+            document.getElementById("currentRole").textContent =
+                currentUser.role.toUpperCase();
+
+            document.getElementById("userAvatar").textContent =
+                currentUser.username.substring(0, 2).toUpperCase();
+
+            const normalizedRole = currentUser.role.toLowerCase();
+
+            if (
+                normalizedRole === "admin" ||
+                normalizedRole === "administrator"
+            ) {
+
+                document.getElementById("currentRole").classList.add(
+                    "admin-indicator"
+                );
+
+                showToast(
+                    "Administrator session",
+                    `Signed in as ${currentUser.username} with administrator privileges.`,
+                    "✓",
+                    3500
+                );
+
+            }
+
+            return true;
+
+        } catch (error) {
+
+            console.error("Session validation failed:", error);
+
+            showToast(
+                "Session validation failed",
+                "Unable to verify your session. Returning to login.",
+                "!"
+            );
+
+            setTimeout(() => window.location.replace("/"), 1200);
+
+            return false;
+
+        }
+
+    }
+
+    // --------------------------------------------------
+    // Sidebar navigation
+    // --------------------------------------------------
+
+    document.querySelectorAll(".sidebar .nav-item").forEach(item => {
+
+        item.addEventListener("click", async event => {
+
+            event.preventDefault();
+
+            const section = item.dataset.section;
+            const target = item.getAttribute("href");
+
+            if (!section || !target) {
+                return;
+            }
+
+            if (!currentUser) {
+
+                const authenticated = await initializeSession();
+
+                if (!authenticated) {
+                    return;
+                }
+
+            }
+
+            const role = currentUser.role.toLowerCase();
+
+            // Devices are available to authenticated users.
+            // Other sections require administrator privileges.
+
+            if (
+                section !== "devices" &&
+                role !== "admin" &&
+                role !== "administrator"
+            ) {
+
+                showAdminToast();
+                return;
+
+            }
+
+            window.location.assign(target);
+
+        });
+
+    });
+
+    // --------------------------------------------------
+    // Logout
+    // --------------------------------------------------
+
+    document.getElementById("logoutButton").addEventListener(
+        "click",
+        async () => {
+
+            const button = document.getElementById("logoutButton");
+
+            button.disabled = true;
+            button.textContent = "Signing out...";
+
+            try {
+
+                const response = await fetch("/api/logout", {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json"
+                    },
+                    credentials: "same-origin"
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Logout failed with HTTP ${response.status}`);
+                }
+
+                window.location.replace("/");
+
+            } catch (error) {
+
+                console.error("Could not log out:", error);
+
+                button.disabled = false;
+                button.textContent = "Sign out";
+
+                showToast(
+                    "Sign out failed",
+                    "The server could not end your session. Please try again.",
+                    "!"
+                );
+
+            }
+
+        }
+    );
+
+    // --------------------------------------------------
+    // Report actions
+    // --------------------------------------------------
+
+    document.querySelectorAll("[data-report]").forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const reportName = button.dataset.report;
+
+            showToast(
+                "Report unavailable",
+                `"${reportName}" is not available in this demo.`,
+                "ℹ"
+            );
+
+        });
+
+    });
+
+    // --------------------------------------------------
+    // Initial load
+    // --------------------------------------------------
+
+    document.addEventListener("DOMContentLoaded", async () => {
+
+        const authenticated = await initializeSession();
+
+        if (!authenticated) {
+            return;
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
